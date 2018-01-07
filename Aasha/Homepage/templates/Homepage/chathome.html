@@ -1,0 +1,60 @@
+{% load staticfiles %}
+
+<html>
+
+<head>
+    <title>Chat with</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'Homepage/chat.css' %}">
+    <link rel="stylesheet" href="{% static 'Homepage/css/style.css' %}">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="container-wrap">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+                <div id="chat-body" class="panel panel-default">
+                    <a style="color: black" href="/home"><div class="panel-heading" style="background-color: #ef9b0f; color:black"> Home</a></div>
+
+
+                    <div id="msg-list-div" class="panel-body">
+                        <ul id="msg-list" class="list-group">
+                            {% for obj in chat %}
+                                {% if obj.user == request.user %}
+                                    <li class="text-right list-group-item">{{ obj.message }}</li>
+                                {% else %}
+                                    <li class="text-left list-group-item">{{ obj.message }}</li>
+                                {% endif %}
+                            {% empty %}
+                                <li class="text-right list-group-item">No messages yet!</li>
+                            {% endfor %}
+                            <script>
+                                var chatlist = document.getElementById('msg-list-div');
+                                chatlist.scrollTop = chatlist.scrollHeight;
+                            </script>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="chat-form" method="post" action="/home/post/">
+        {% csrf_token %}
+        <div id="chat-bottom" class="input-group">
+            <input type="text" id="chat-msg" name="chat-msg" class="form-control"/>
+            <span class="input-group-btn">
+                <input class="btn btn-primary" id="send" type="submit" value="Send"/>
+            </span>
+        </div>
+    </form>
+</body>
+
+<script src="{% static 'Homepage/chat.js' %}"></script>
+</html>
